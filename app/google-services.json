@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "254869163965",
+    "project_id": "dogshare-bd8f3",
+    "storage_bucket": "dogshare-bd8f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254869163965:android:798077acf9fc64b47f8cd4",
+        "android_client_info": {
+          "package_name": "com.dogshare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254869163965-0hcptslc0d2ln2nvgreijr53ea1v6ml3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dogshare",
+            "certificate_hash": "ab061cad4fc713ee7fc9e0fb7bd67f22105db3d4"
+          }
+        },
+        {
+          "client_id": "254869163965-p0medkisngt0sj2t1r24pku9v08p3kgm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0ZjCDsRqP35szy72u9PBwAGz4VR4R9UY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254869163965-p0medkisngt0sj2t1r24pku9v08p3kgm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
