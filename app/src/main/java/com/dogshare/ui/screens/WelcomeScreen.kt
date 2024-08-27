@@ -28,7 +28,7 @@ fun WelcomeScreen(username: String) {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
-                painter = painterResource(id = R.drawable.logo), // Assuming you have 'logo' drawable
+                painter = painterResource(id = R.drawable.dog_image), // Assuming you have 'logo' drawable
                 contentDescription = "App Logo",
                 modifier = Modifier.size(120.dp)
             )
