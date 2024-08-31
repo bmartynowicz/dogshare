@@ -51,24 +51,48 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.androidx.compose.bom))
 
+    // AndroidX and Jetpack Compose dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
+
+    // Compose UI and Material 3
+    implementation("androidx.compose.ui:ui:1.6.8")
+    implementation("androidx.compose.foundation:foundation:1.6.8")
+    implementation("androidx.compose.material:material:1.6.8")
+    implementation("androidx.compose.material3:material3:1.2.1")
+
+    // Firebase dependencies
+    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation(libs.firebase.auth.ktx)
-    implementation(libs.androidx.media3.effect)
+    implementation(libs.firebase.firestore.ktx)
+    implementation("com.google.firebase:firebase-auth-ktx") // For Firebase Authentication
+    implementation("com.google.firebase:firebase-firestore-ktx") // If you're using Firestore
+
+    // Navigation for Compose
+    implementation("androidx.navigation:navigation-compose:2.7.1")
+
+    // Material Icons and Accompanist
+    implementation("androidx.compose.material:material-icons-core:1.6.8")
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
+
+    // Coil for image loading
+    implementation("io.coil-kt:coil-compose:2.2.2")
+
+    // Google Play Services for location
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation(libs.androidx.media3.common)
+
+    // Testing dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.navigation:navigation-compose:2.5.1")
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8")
+
+    // Debugging tools
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.8")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
 }
