@@ -3,6 +3,8 @@ package com.dogshare.ui.composables
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -58,17 +60,6 @@ fun QuestionnaireSection(
     @SuppressLint("MissingPermission")
     fun captureLocation() {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Request the missing permissions and handle the response
-            return
-        }
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
                 location?.let {
@@ -81,9 +72,41 @@ fun QuestionnaireSection(
             }
     }
 
+    // Launcher to request location permission
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+        if (granted) {
+            // Permission is granted, capture the location
+            captureLocation()
+        } else {
+            // Handle the case where the permission is denied
+            // Show a message or navigate away
+        }
+    }
+
     // Call captureLocation when the composable is first loaded
     LaunchedEffect(Unit) {
-        captureLocation()
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Request the missing permissions
+            locationPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        } else {
+            // Permissions are already granted, capture the location
+            captureLocation()
+        }
     }
 
     Column(modifier = Modifier.padding(16.dp)) {
