@@ -1,3 +1,5 @@
+package com.dogshare.ui.screens
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -9,13 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.dogshare.R
 import com.google.firebase.auth.FirebaseAuth
+import com.dogshare.R
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.ContentScale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onForgotPassword: () -> Unit,
@@ -24,8 +28,8 @@ fun LoginScreen(
     onLoginFailed: (String) -> Unit
 ) {
     val auth = FirebaseAuth.getInstance()
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf(TextFieldValue("")) }
+    var password by remember { mutableStateOf(TextFieldValue("")) }
     var loginErrorMessage by remember { mutableStateOf("") }
     val emailFocusRequester = FocusRequester()
     val passwordFocusRequester = FocusRequester()
@@ -45,6 +49,14 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo",
+                modifier = Modifier.size(120.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             TextField(
                 value = email,
                 onValueChange = { email = it },
@@ -65,7 +77,7 @@ fun LoginScreen(
                     .focusRequester(passwordFocusRequester),
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
-                    performLogin(auth, email, password, onLoginSuccess, onLoginFailed)
+                    performLogin(auth, email.text, password.text, onLoginSuccess, onLoginFailed)
                 })
             )
             if (loginErrorMessage.isNotEmpty()) {
@@ -79,7 +91,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    performLogin(auth, email, password, onLoginSuccess, onLoginFailed)
+                    performLogin(auth, email.text, password.text, onLoginSuccess, onLoginFailed)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -97,7 +109,6 @@ fun LoginScreen(
     }
 }
 
-// Here is the performLogin function
 fun performLogin(
     auth: FirebaseAuth,
     email: String,
@@ -109,7 +120,7 @@ fun performLogin(
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    onLoginSuccess(email)  // Passing email to onLoginSuccess
+                    onLoginSuccess(email)
                 } else {
                     onLoginFailed(task.exception?.message ?: "Authentication failed")
                 }
@@ -117,8 +128,4 @@ fun performLogin(
     } else {
         onLoginFailed("Please enter both email and password.")
     }
-}
-
-class LoginScreen {
-
 }
