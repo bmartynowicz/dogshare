@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    implementation(platform(libs.androidx.compose.bom)) // BOM for Compose
+    implementation(platform(libs.androidx.compose.bom))
 
     // AndroidX and Jetpack Compose dependencies
     implementation(libs.androidx.core.ktx)
@@ -59,35 +59,43 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     // Compose UI and Material 3
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.material3)
+    implementation(libs.ui)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.material)
+    implementation(libs.material3)
 
     // Firebase dependencies
-    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
 
+    // Koin for dependency injection framework for Kotlin
+    implementation(libs.koin.core.v320)
+    implementation(libs.koin.android.v320)
+    implementation(libs.koin.androidx.compose.v320) // Use this for Jetpack Compose
+
     // Navigation for Compose
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation(libs.androidx.navigation.compose)
+
+    // Material Icons and Accompanist
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.accompanist.navigation.animation)
+
+    // Coil for image loading
+    implementation(libs.coil.compose)
+
+    // Google Play Services for location
+    implementation(libs.play.services.location)
+    implementation(libs.androidx.media3.common)
 
     // Testing dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.ui.test.junit4)
 
     // Debugging tools
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
-    // UI and Materials
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8")
-    implementation("androidx.compose.ui:ui:1.4.0")
-    implementation("androidx.compose.foundation:foundation:1.6.8")
-    implementation("androidx.compose.material:material-icons-core:1.3.0")
-    implementation("androidx.compose.material:material-icons-extended:1.3.0")
-    implementation("androidx.compose.material3:material3:1.2.1")
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
-    implementation("io.coil-kt:coil-compose:2.2.2")
-
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
 }

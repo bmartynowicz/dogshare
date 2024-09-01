@@ -1,5 +1,6 @@
 package com.dogshare.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,25 +21,18 @@ fun SettingItemToggle(
     isChecked: Boolean,
     onSettingChanged: (String, Boolean) -> Unit
 ) {
-    var isToggled by remember { mutableStateOf(isChecked) }
-
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = settingLabel,
-            modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.bodyLarge
-        )
+        Text(text = settingLabel)
         Switch(
-            checked = isToggled,
-            onCheckedChange = {
-                isToggled = it
-                onSettingChanged(settingKey, it)
+            checked = isChecked,
+            onCheckedChange = { isChecked ->
+                onSettingChanged(settingKey, isChecked)
             }
         )
     }
 }
+
