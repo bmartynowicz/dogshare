@@ -3,32 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Location permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <!-- Optional: Background location access for Android 10 (API 29) and above -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <application
-        android:enableOnBackInvokedCallback="true"
+        android:name=".DogShareApplication"
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="Dog Share"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DogShare"
-        tools:targetApi="31">
+        android:theme="@style/Theme.DogShare">
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.DogShare">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

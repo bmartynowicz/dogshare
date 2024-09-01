@@ -1,17 +1,25 @@
-// File: src/main/java/com/dogshare/utils/FirestoreUtils.kt
-
 package com.dogshare.utils
 
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
 
-// Utility function to check if user preferences exist in Firestore
-fun checkUserPreferences(username: String, onResult: (Boolean) -> Unit) {
-    val db = FirebaseFirestore.getInstance()
-    db.collection("user_preferences").document(username).get()
-        .addOnSuccessListener { document ->
-            onResult(document.exists())
+object FirestoreUtils {
+
+    private val db = FirebaseFirestore.getInstance()
+
+    // Using suspend function and coroutines for better asynchronous handling
+    suspend fun checkUserPreferences(username: String, dispatcher: CoroutineDispatcher = Dispatchers.IO): Boolean = withContext(dispatcher) {
+        if (username.isBlank()) return@withContext false
+
+        try {
+            val documentSnapshot = db.collection("user_preferences").document(username).get().await()
+            documentSnapshot.exists()
+        } catch (e: Exception) {
+            // Log error or handle it as per application's error handling policy
+            false
         }
-        .addOnFailureListener {
-            onResult(false)
-        }
+    }
 }
