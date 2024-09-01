@@ -1,4 +1,4 @@
-package com.dogshare.ui
+package com.dogshare.utils
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission

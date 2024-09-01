@@ -2,15 +2,15 @@ package com.dogshare.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavHostController
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.dogshare.ui.screens.*
+import androidx.navigation.NavType
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
 
     NavHost(navController = navController, startDestination = NavigationRoutes.Login.route, modifier = modifier) {
 
@@ -41,6 +41,8 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
                         }
                     }
                 )
+            } ?: navController.navigate(NavigationRoutes.Login.route) {
+                popUpTo(0) { inclusive = true }  // Clear the entire backstack
             }
         }
 
@@ -96,15 +98,20 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
                     userId = it,
                     navController = navController,
                     matches = listOf("Match 1", "Match 2", "Match 3"),  // Replace with actual data
-                    onMatchSelected = { matchId ->
+                    onMatchSelected = {
                         // Handle match selection, e.g., navigate to a match detail screen
                     }
                 )
+            } ?: navController.navigate(NavigationRoutes.Login.route) {
+                popUpTo(0) { inclusive = true }  // Clear the entire backstack
             }
         }
 
         // Profile Screen
-        composable(NavigationRoutes.Profile.route) { backStackEntry ->
+        composable(
+            route = NavigationRoutes.Profile.route,
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+        ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")
             if (userId != null) {
                 ProfileScreen(
@@ -113,37 +120,41 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
                     onLogout = {
                         navController.navigate(NavigationRoutes.Login.route) {
                             popUpTo(NavigationRoutes.LandingPage.route) { inclusive = true }
+                            launchSingleTop = true
                         }
-                    },
-                    onUpdateProfile = {
-                        // Handle profile update, e.g., navigate to a profile edit screen
                     }
                 )
             } else {
-                // Handle the case where userId is not available
-                // Optionally, navigate to an error screen or the login screen
-                navController.navigate(NavigationRoutes.Login.route)
+                navController.navigate(NavigationRoutes.Login.route) {
+                    popUpTo(0) { inclusive = true }  // Clear the entire backstack
+                }
             }
         }
 
+        // Profile Update Screen
+        composable(
+            route = NavigationRoutes.ProfileUpdate.route,
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: throw IllegalStateException("User ID is required for ProfileUpdateScreen")
+            ProfileUpdateScreen(userId = userId, navController = navController)
+        }
+
         // Settings Screen
-        composable(NavigationRoutes.Settings.createRoute("{userId}")) { backStackEntry ->
+        composable(
+            route = NavigationRoutes.Settings.route,
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+        ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")
             if (userId != null) {
                 SettingsScreen(
-                    context = context,
                     userId = userId,
-                    navController = navController,
-                    onSettingChanged = { settingKey, isEnabled ->
-                        // Handle setting change
-                    }
+                    navController = navController
                 )
             } else {
                 // Optionally navigate to an error screen or the login screen
                 navController.navigate(NavigationRoutes.Login.route)
             }
         }
-
-
     }
 }

@@ -1,6 +1,5 @@
-package com.dogshare.viewmodel
+package com.dogshare.viewmodels
 
-import AuthViewModel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

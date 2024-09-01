@@ -1,7 +1,5 @@
 package com.dogshare.ui.screens
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -11,87 +9,78 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.dogshare.ui.components.BottomNavigationBar
 import com.dogshare.ui.components.SettingItemToggle
-import com.dogshare.ui.utils.checkUserPreferences
-import com.dogshare.utils.PreferencesManager
+import com.dogshare.viewmodels.SettingsViewModel
+import org.koin.androidx.compose.koinViewModel
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun SettingsScreen(
-    context: Context,
     userId: String,
-    navController: NavController,
-    onSettingChanged: (String, Boolean) -> Unit
+    navController: NavController
 ) {
-    var notificationsEnabled by remember { mutableStateOf(false) }
-    var darkModeEnabled by remember { mutableStateOf(false) }
-    var accountPrivacyEnabled by remember { mutableStateOf(false) }
+    // Inject the SettingsViewModel using Koin
+    val viewModel: SettingsViewModel = koinViewModel()
 
-    Log.d("Initializing SettingsScreen", "userId: $userId")
+    // Get the current context
+    val context = LocalContext.current
 
-    LaunchedEffect(userId) {
-        if (userId.isNotBlank()) {
-            checkUserPreferences(userId) { hasPreferences ->
-                if (hasPreferences) {
-                    notificationsEnabled = PreferencesManager.getBooleanPreference(context, "notifications", false)
-                    darkModeEnabled = PreferencesManager.getBooleanPreference(context, "dark_mode", false)
-                    accountPrivacyEnabled = PreferencesManager.getBooleanPreference(context, "account_privacy", false)
-                }
-            }
-        } else {
-            Log.d("SettingsScreen", "Invalid userId: $userId")
-        }
+    // Load preferences when the screen is composed
+    LaunchedEffect(context) {
+        viewModel.loadPreferences() // Ensure preferences are loaded on composition
     }
 
-    Log.d("SettingsScreen", "Loaded settings for userId: $userId")
+    // Collect state values from the ViewModel
+    val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
+    val darkModeEnabled by viewModel.darkModeEnabled.collectAsState()
+    val accountPrivacyEnabled by viewModel.accountPrivacyEnabled.collectAsState()
 
+    // Scaffold for the Settings screen layout
     Scaffold(
-        bottomBar = {
-            BottomNavigationBar(navController = navController, userId = userId)
-        }
+        bottomBar = { BottomNavigationBar(navController = navController, userId = userId) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Title of the Settings screen
             Text(text = "Settings", style = MaterialTheme.typography.headlineSmall)
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Toggle for Notifications setting
             SettingItemToggle(
                 settingKey = "notifications",
                 settingLabel = "Enable Notifications",
                 isChecked = notificationsEnabled,
                 onSettingChanged = { key, isEnabled ->
-                    notificationsEnabled = isEnabled
-                    PreferencesManager.setBooleanPreference(context, key, isEnabled)
-                    onSettingChanged(key, isEnabled)
+                    viewModel.updatePreference(key, isEnabled)
                 }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Toggle for Dark Mode setting
             SettingItemToggle(
                 settingKey = "dark_mode",
                 settingLabel = "Enable Dark Mode",
                 isChecked = darkModeEnabled,
                 onSettingChanged = { key, isEnabled ->
-                    darkModeEnabled = isEnabled
-                    PreferencesManager.setBooleanPreference(context, key, isEnabled)
-                    onSettingChanged(key, isEnabled)
+                    viewModel.updatePreference(key, isEnabled)
                 }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Toggle for Account Privacy setting
             SettingItemToggle(
                 settingKey = "account_privacy",
                 settingLabel = "Private Account",
                 isChecked = accountPrivacyEnabled,
                 onSettingChanged = { key, isEnabled ->
-                    accountPrivacyEnabled = isEnabled
-                    PreferencesManager.setBooleanPreference(context, key, isEnabled)
-                    onSettingChanged(key, isEnabled)
+                    viewModel.updatePreference(key, isEnabled)
                 }
             )
 
@@ -99,4 +88,3 @@ fun SettingsScreen(
         }
     }
 }
-
