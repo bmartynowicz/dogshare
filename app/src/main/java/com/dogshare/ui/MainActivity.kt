@@ -1,13 +1,29 @@
+package com.dogshare.ui
+
 import android.content.Context
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.dogshare.navigation.AppNavigation
+import com.dogshare.navigation.NavigationRoutes
+import com.dogshare.ui.theme.DogShareTheme
 import com.google.firebase.auth.FirebaseAuth
 import java.util.concurrent.TimeUnit
-import com.dogshare.navigation.NavigationRoutes
-import com.dogshare.navigation.AppNavigation
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            DogShareTheme {
+                DogShareApp()
+            }
+        }
+    }
+}
 
 @Composable
 fun DogShareApp() {

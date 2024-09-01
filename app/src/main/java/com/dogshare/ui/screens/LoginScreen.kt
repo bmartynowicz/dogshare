@@ -1,12 +1,15 @@
 package com.dogshare.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen(
@@ -15,8 +18,13 @@ fun LoginScreen(
     onLoginSuccess: (String) -> Unit,
     onLoginFailed: (String) -> Unit
 ) {
-    var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var loginErrorMessage by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
+
+    // Get the current context
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -25,16 +33,17 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Login Screen")
+        Text(text = "Login", style = MaterialTheme.typography.headlineSmall)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Username TextField
+        // Email TextField
         TextField(
-            value = username,
-            onValueChange = { username = it },
-            label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth()
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -45,38 +54,98 @@ fun LoginScreen(
             onValueChange = { password = it },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
             visualTransformation = PasswordVisualTransformation() // Hide the password input
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            // Handle login logic
-            if (username.isNotBlank() && password.isNotBlank()) {
-                onLoginSuccess("userId123")  // Replace with actual login logic
+        // Display an error message if login fails
+        loginErrorMessage?.let {
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+
+        // Log In button
+        Button(
+            onClick = {
+                isLoading = true
+                // Handle login logic
+                performLogin(
+                    email = email,
+                    password = password,
+                    context = context,  // Pass the context here
+                    onLoginSuccess = { userId ->
+                        isLoading = false
+                        onLoginSuccess(userId)
+                    },
+                    onLoginFailed = { error ->
+                        isLoading = false
+                        loginErrorMessage = error
+                        onLoginFailed(error)
+                    }
+                )
+            },
+            enabled = !isLoading,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             } else {
-                onLoginFailed("Username or password cannot be empty")
+                Text(text = "Log In")
             }
-        }) {
-            Text(text = "Log In")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(onClick = onForgotPassword) {
+            Text(text = "Forgot Password?")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button(onClick = onForgotPassword) {
-            Text(text = "Forgot Password")
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(onClick = onCreateAccount) {
+        TextButton(onClick = onCreateAccount) {
             Text(text = "Create Account")
         }
+    }
+}
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(onClick = { onLoginFailed("Login failed") }) {
-            Text(text = "Login Failed")
-        }
+private fun performLogin(
+    email: String,
+    password: String,
+    context: Context,  // Accept the Context as a parameter
+    onLoginSuccess: (String) -> Unit,
+    onLoginFailed: (String) -> Unit
+) {
+    val auth = FirebaseAuth.getInstance()
+    if (email.isNotBlank() && password.isNotBlank()) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userId = auth.currentUser?.uid
+                    if (userId != null) {
+                        // Save the current timestamp
+                        val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+                        with(sharedPreferences.edit()) {
+                            putLong("last_login_timestamp", System.currentTimeMillis())
+                            apply()
+                        }
+                        onLoginSuccess(userId)
+                    } else {
+                        onLoginFailed("Failed to retrieve user ID")
+                    }
+                } else {
+                    onLoginFailed(task.exception?.message ?: "Authentication failed")
+                }
+            }
+    } else {
+        onLoginFailed("Email or password cannot be empty")
     }
 }
