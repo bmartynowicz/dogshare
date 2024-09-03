@@ -1,5 +1,5 @@
-# dogshare
-DogShare Application
+# DogShare Application
+
 DogShare is a mobile application designed for Android, primarily programmed in Java with components in Kotlin. The app is built with the goal of providing a platform for dog owners to share information, preferences, and connect with each other. It leverages Firebase for authentication, Firestore for data storage, and Koin for dependency injection. The app is designed to be user-friendly and is equipped with modern Android features, including Jetpack Compose for UI and a robust navigation system.
 
 Features

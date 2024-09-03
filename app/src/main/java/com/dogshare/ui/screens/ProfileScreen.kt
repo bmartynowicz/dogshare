@@ -30,11 +30,12 @@ fun ProfileScreen(
     val saveProfileState by viewModel.saveProfileState.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    // Load profile data on initial composition
-    LaunchedEffect(userId) {
+    // Effect to fetch profile data whenever userId changes or re-fetch on re-composition
+    DisposableEffect(Unit) { // Triggers whenever the composable enters the composition
         if (userId.isNotBlank()) {
             viewModel.fetchProfile(userId)
         }
+        onDispose { }
     }
 
     Scaffold(
