@@ -7,7 +7,6 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-
 object AuthUtils {
     private const val PREFS_NAME = "com.dogshare.prefs"
     private const val KEY_IS_LOGGED_IN = "isLoggedIn"
@@ -29,6 +28,7 @@ object AuthUtils {
         firebaseAuth.addAuthStateListener { firebaseAuth ->
             val userLoggedIn = firebaseAuth.currentUser != null
             updateLoginState(userLoggedIn)
+            Log.d(TAG, "AuthStateListener triggered: User logged in status is $userLoggedIn")
         }
     }
 
@@ -39,15 +39,21 @@ object AuthUtils {
     }
 
     fun isUserLoggedIn(): Boolean {
-        return _isLoggedIn.value
+        return firebaseAuth.currentUser != null
     }
 
     fun setUserLoggedIn(isLoggedIn: Boolean) {
         if (isLoggedIn) {
             // Manage Firebase sign-in if needed
+            Log.d(TAG, "Setting user as logged in")
         } else {
             firebaseAuth.signOut()  // Sign out from Firebase
+            Log.d(TAG, "User signed out")
         }
         updateLoginState(isLoggedIn)
+    }
+
+    fun getCurrentUserId(): String? {
+        return firebaseAuth.currentUser?.uid
     }
 }

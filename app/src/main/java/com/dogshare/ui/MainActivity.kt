@@ -3,18 +3,18 @@ package com.dogshare.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.dogshare.navigation.AppNavigation
+import com.dogshare.navigation.NavigationRoutes
 import com.dogshare.ui.theme.DogShareTheme
-import com.dogshare.viewmodels.MainViewModel
-import org.koin.androidx.compose.getViewModel
+import com.dogshare.utils.PreferencesManager
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)  // Ensure you're calling the superclass's onCreate method
         setContent {
             DogShareTheme {
                 DogShareApp()
@@ -27,11 +27,21 @@ class MainActivity : ComponentActivity() {
 fun DogShareApp() {
     val navController = rememberNavController()
     val context = LocalContext.current
-    val viewModel: MainViewModel = getViewModel() // Injecting MainViewModel using Koin
+
+    // State to track when the login check is completed
+    var startDestination by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(key1 = true) {
-        viewModel.checkUserStatus(context)
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        startDestination = if (firebaseUser == null) {
+            NavigationRoutes.Login.route
+        } else {
+            NavigationRoutes.LandingPage.createRoute(firebaseUser.uid)
+        }
     }
 
-    AppNavigation(navController = navController)
+    // Ensure that the navigation setup only happens once the start destination is determined
+    startDestination?.let {
+        AppNavigation(navController = navController)
+    }
 }

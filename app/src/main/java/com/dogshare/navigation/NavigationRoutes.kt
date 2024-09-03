@@ -17,6 +17,9 @@ sealed class NavigationRoutes(val route: String) {
     object Settings : NavigationRoutes("settings/{userId}") {
         fun createRoute(userId: String) = "settings/$userId"
     }
+    object Swiping : NavigationRoutes("swiping/{userId}") {
+        fun createRoute(userId: String) = "swiping/$userId"
+    }
     object ForgotPassword : NavigationRoutes("forgotPassword")
     object CreateAccount : NavigationRoutes("createAccount")
     object LoginFailed : NavigationRoutes("loginFailed")

@@ -1,6 +1,7 @@
 package com.dogshare.ui.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,6 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.dogshare.utils.PreferencesManager.saveUserId
+import com.dogshare.utils.PreferencesManager.setPromptLogin
+import com.dogshare.utils.PreferencesManager.updateLastLoginTimestamp
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -74,6 +78,7 @@ fun LoginScreen(
         Button(
             onClick = {
                 isLoading = true
+                Log.d("LoginScreen", "Attempting to log in with email: $email")
                 // Handle login logic
                 performLogin(
                     email = email,
@@ -81,10 +86,12 @@ fun LoginScreen(
                     context = context,  // Pass the context here
                     onLoginSuccess = { userId ->
                         isLoading = false
+                        Log.d("LoginScreen", "Login successful, userId: $userId")
                         onLoginSuccess(userId)
                     },
                     onLoginFailed = { error ->
                         isLoading = false
+                        Log.e("LoginScreen", "Login failed: $error")
                         loginErrorMessage = error
                         onLoginFailed(error)
                     }
@@ -120,7 +127,7 @@ fun LoginScreen(
 private fun performLogin(
     email: String,
     password: String,
-    context: Context,  // Accept the Context as a parameter
+    context: Context,
     onLoginSuccess: (String) -> Unit,
     onLoginFailed: (String) -> Unit
 ) {
@@ -131,21 +138,28 @@ private fun performLogin(
                 if (task.isSuccessful) {
                     val userId = auth.currentUser?.uid
                     if (userId != null) {
-                        // Save the current timestamp
-                        val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-                        with(sharedPreferences.edit()) {
-                            putLong("last_login_timestamp", System.currentTimeMillis())
-                            apply()
-                        }
+                        Log.d("LoginScreen", "Firebase login successful, userId: $userId")
+
+                        // Use the dedicated functions
+                        saveUserId(userId)
+                        updateLastLoginTimestamp()
+                        setPromptLogin(false)
+
                         onLoginSuccess(userId)
                     } else {
-                        onLoginFailed("Failed to retrieve user ID")
+                        val error = "Failed to retrieve user ID"
+                        Log.e("LoginScreen", error)
+                        onLoginFailed(error)
                     }
                 } else {
-                    onLoginFailed(task.exception?.message ?: "Authentication failed")
+                    val error = task.exception?.message ?: "Authentication failed"
+                    Log.e("LoginScreen", "Firebase login failed: $error")
+                    onLoginFailed(error)
                 }
             }
     } else {
-        onLoginFailed("Email or password cannot be empty")
+        val error = "Email or password cannot be empty"
+        Log.e("LoginScreen", error)
+        onLoginFailed(error)
     }
 }

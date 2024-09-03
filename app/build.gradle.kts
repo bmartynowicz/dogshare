@@ -52,6 +52,8 @@ android {
 
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.security.crypto.ktx.v110alpha06)
+
 
     // AndroidX and Jetpack Compose dependencies
     implementation(libs.androidx.core.ktx)
@@ -88,6 +90,7 @@ dependencies {
     // Google Play Services for location
     implementation(libs.play.services.location)
     implementation(libs.androidx.media3.common)
+    implementation(libs.androidx.security.crypto.ktx)
 
     // Testing dependencies
     testImplementation(libs.junit)

@@ -6,16 +6,16 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
 
-// Assuming usage of Kotlin Coroutines for asynchronous tasks
-suspend fun checkUserPreferences(userId: String, dispatcher: CoroutineDispatcher = Dispatchers.IO): Boolean = withContext(dispatcher) {
-    if (userId.isBlank()) return@withContext false
-
-    val db = FirebaseFirestore.getInstance()
-    try {
-        val documentSnapshot = db.collection("user_preferences").document(userId).get().await()
-        documentSnapshot.exists()
-    } catch (e: Exception) {
-        // Log the exception or handle it as necessary
-        false
+suspend fun checkUserPreferences(userId: String, dispatcher: CoroutineDispatcher = Dispatchers.IO): Boolean {
+    return withContext(dispatcher) {
+        val db = FirebaseFirestore.getInstance()
+        val userPreferencesRef = db.collection("user_preferences").document(userId)
+        try {
+            val document = userPreferencesRef.get().await()
+            document != null && document.exists()
+        } catch (e: Exception) {
+            // Handle the exception
+            false
+        }
     }
 }
