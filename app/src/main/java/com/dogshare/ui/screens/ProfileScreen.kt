@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.dogshare.viewmodels.LogoutViewModel
 import com.dogshare.viewmodels.ProfileViewModel
 import org.koin.androidx.compose.koinViewModel
 import com.dogshare.ui.components.BottomNavigationBar
@@ -17,10 +18,10 @@ import com.dogshare.ui.components.BottomNavigationBar
 fun ProfileScreen(
     userId: String,
     navController: NavController,
-    onLogout: () -> Unit,
-    viewModel: ProfileViewModel = koinViewModel()
+    viewModel: ProfileViewModel = koinViewModel(),
+    logoutViewModel: LogoutViewModel = koinViewModel() // Inject LogoutViewModel
 ) {
-    // Observe the states from the ViewModel
+    // Observe the states from the ProfileViewModel
     val email by viewModel.email.collectAsState()
     val petType by viewModel.petType.collectAsState()
     val petSize by viewModel.petSize.collectAsState()
@@ -31,11 +32,8 @@ fun ProfileScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
     // Effect to fetch profile data whenever userId changes or re-fetch on re-composition
-    DisposableEffect(Unit) { // Triggers whenever the composable enters the composition
-        if (userId.isNotBlank()) {
-            viewModel.fetchProfile(userId)
-        }
-        onDispose { }
+    LaunchedEffect(userId) {
+        viewModel.fetchProfile(userId)
     }
 
     Scaffold(
@@ -116,8 +114,12 @@ fun ProfileScreen(
 
                 Button(
                     onClick = {
-                        viewModel.onLogout()
-                        onLogout()
+                        logoutViewModel.logout {
+                            // Navigate to login screen after logout
+                            navController.navigate("login") {
+                                popUpTo(0) { inclusive = true }  // Clear back stack
+                            }
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)

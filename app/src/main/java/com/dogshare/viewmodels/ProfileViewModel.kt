@@ -104,9 +104,4 @@ class ProfileViewModel : ViewModel() {
     fun updateTravelDistance(newTravelDistance: String) {
         _travelDistance.value = newTravelDistance
     }
-
-    // Function to handle logout
-    fun onLogout() {
-        // Perform any necessary cleanup or state updates on logout
-    }
 }

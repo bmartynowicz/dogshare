@@ -9,7 +9,6 @@ import androidx.navigation.compose.rememberNavController
 import com.dogshare.navigation.AppNavigation
 import com.dogshare.navigation.NavigationRoutes
 import com.dogshare.ui.theme.DogShareTheme
-import com.dogshare.utils.PreferencesManager
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {

@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dogshare.ui.screens.*
-import androidx.navigation.NavType
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -64,14 +63,6 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
         // Create Account Screen
         composable(NavigationRoutes.CreateAccount.route) {
             CreateAccountScreen(
-                onAccountCreated = { userId ->
-                    navController.navigate(NavigationRoutes.LandingPage.createRoute(userId)) {
-                        popUpTo(NavigationRoutes.Login.route) { inclusive = true }
-                    }
-                },
-                onAccountCreationFailed = {
-                    // Handle account creation failure, e.g., show a message
-                },
                 onLoginInstead = {
                     navController.popBackStack() // Go back to the login screen
                 }
@@ -117,12 +108,6 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
                 ProfileScreen(
                     userId = userId,
                     navController = navController,
-                    onLogout = {
-                        navController.navigate(NavigationRoutes.Login.route) {
-                            popUpTo(NavigationRoutes.LandingPage.route) { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    }
                 )
             } else {
                 navController.navigate(NavigationRoutes.Login.route) {

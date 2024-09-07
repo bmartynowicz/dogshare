@@ -20,7 +20,7 @@ fun BottomNavigationBar(navController: NavController, userId: String) {
     val items = listOf(
         BottomNavItem(NavigationRoutes.LandingPage.createRoute(userId), Icons.Default.Home, "Home"),
         BottomNavItem(NavigationRoutes.Matches.createRoute(userId), Icons.Default.Favorite, "Matches"),
-        BottomNavItem(NavigationRoutes.Settings.route, Icons.Default.Settings, "Settings"),
+        BottomNavItem(NavigationRoutes.Settings.createRoute(userId), Icons.Default.Settings, "Settings"),
         BottomNavItem(NavigationRoutes.Profile.createRoute(userId), Icons.Default.AccountCircle, "Profile")
     )
 
