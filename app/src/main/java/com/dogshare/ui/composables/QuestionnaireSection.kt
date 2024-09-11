@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.navigation.NavHostController
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FirebaseFirestore
+import com.dogshare.ui.components.ToastUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,11 +49,11 @@ fun QuestionnaireSection(
                 // Navigate to the SwipingSection after saving preferences
                 navController.navigate("swiping/${userId}")
             }.addOnFailureListener {
-                // Handle failure (e.g., show a message)
+                ToastUtils.showToast(context,"Failed to save preferences, please try again.")
             }
         } else {
-            // Handle case where location is not available
-            // Show a message to the user or retry
+            // Inform the user about unavailable location
+            ToastUtils.showToast(context,"Location not available, please retry.")
         }
     }
 

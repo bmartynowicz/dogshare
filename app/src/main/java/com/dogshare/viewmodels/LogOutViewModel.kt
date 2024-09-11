@@ -11,23 +11,24 @@ import org.koin.java.KoinJavaComponent.inject
 class LogoutViewModel(private val context: Context) : ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-
-    // Inject PreferencesRepository
     private val preferencesRepository: PreferencesRepository by inject(PreferencesRepository::class.java)
 
     fun logout(onLogoutSuccess: () -> Unit) {
         viewModelScope.launch {
-            // Sign out from Firebase Authentication
-            auth.signOut()
-
-            // Clear user-related preferences using PreferencesRepository
+            auth.signOut()  // Firebase sign out
             preferencesRepository.clearUserId()
             preferencesRepository.setPromptLogin(true)
 
-            // Perform additional cleanup if necessary
+            // Clear app cache or additional session data
+            clearAppCache()
 
-            // Call the success callback to indicate logout is complete
             onLogoutSuccess()
         }
+    }
+
+    private fun clearAppCache() {
+        val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        sharedPreferences.edit().clear().apply() // Clear preferences
+        // You can also clean up other cached files or temporary data here
     }
 }

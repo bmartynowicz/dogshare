@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary colors -->
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+
+    <!-- Custom dark mode colors -->
+    <color name="dark_gray">#121212</color>
+    <color name="black">#000000</color>
+    <color name="light_gray">#D3D3D3</color>
+
+    <!-- Other colors -->
+    <color name="white">#FFFFFF</color>
+</resources>

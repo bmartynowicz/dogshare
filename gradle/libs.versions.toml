@@ -3,8 +3,10 @@ accompanistNavigationAnimation = "0.34.0"
 agp = "8.5.2"
 androidxSecurityCryptoKtx = "1.1.0-alpha06"
 coilCompose = "2.2.2"
+firebaseAuth = "23.0.0"
 firebaseBom = "33.2.0"
 foundation = "1.6.8"
+googleServices = "4.4.2"
 koinAndroid = "3.1.5"
 koinAndroidVersion = "3.2.0"
 koinAndroidxCompose = "3.1.5"
@@ -29,12 +31,14 @@ media3Effect = "1.4.1"
 firebaseFirestoreKtx = "25.1.0"
 media3Common = "1.4.1"
 navigationCompose = "2.7.7"
+playServicesAuth = "21.2.0"
 playServicesLocation = "21.3.0"
 ui = "1.6.8"
 uiTestJunit4 = "1.6.8"
 uiTestManifest = "1.6.8"
 uiTooling = "1.6.8"
 securityCryptoKtx = "1.0.0"
+roomPaging = "2.6.1"
 
 [libraries]
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
@@ -46,7 +50,9 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-security-crypto-ktx-v110alpha06 = { module = "androidx.security:security-crypto-ktx", version.ref = "androidxSecurityCryptoKtx" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -72,12 +78,14 @@ koin-androidx-viewmodel = { module = "io.insert-koin:koin-androidx-viewmodel", v
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 koin-core-v320 = { module = "io.insert-koin:koin-core", version.ref = "koinCoreVersion" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "uiTestJunit4" }
 ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestManifest" }
 ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
 androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "roomPaging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

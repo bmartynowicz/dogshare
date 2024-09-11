@@ -16,11 +16,11 @@ val viewModelModule = module {
     // Provide FirebaseAuth instance
     single { FirebaseAuth.getInstance() }
 
-    // Provide FirebaseFirestore instance
+    // Provide Firebase Firestore instance
     single { FirebaseFirestore.getInstance() }
 
-    // Provide PreferencesRepository with Context and FirebaseFirestore as dependencies
-    single { PreferencesRepository(get(), get()) }
+    // Provide PreferencesRepository with Context and Firebase Firestore as dependencies
+    single { PreferencesRepository(get())}
 
     // Provide MainViewModel with FirebaseAuth as a dependency
     viewModel { MainViewModel(get()) }

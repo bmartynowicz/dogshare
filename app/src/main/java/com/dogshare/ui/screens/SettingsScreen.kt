@@ -8,10 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.dogshare.ui.components.BottomNavigationBar
-import com.dogshare.ui.components.SettingItemToggle
 import com.dogshare.viewmodels.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.ui.platform.LocalContext
+import com.dogshare.ui.components.SettingItemToggle
 
 @Composable
 fun SettingsScreen(
@@ -68,6 +68,7 @@ fun SettingsScreen(
                 settingLabel = "Enable Dark Mode",
                 isChecked = darkModeEnabled,
                 onSettingChanged = { key, isEnabled ->
+                    // Toggle dark mode based on the switch state
                     viewModel.updatePreference(key, isEnabled)
                 }
             )
@@ -83,8 +84,6 @@ fun SettingsScreen(
                     viewModel.updatePreference(key, isEnabled)
                 }
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

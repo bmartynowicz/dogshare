@@ -1,35 +1,33 @@
 package com.dogshare.ui.screens
 
-import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.dogshare.repository.PreferencesRepository
 import com.google.firebase.auth.FirebaseAuth
 import org.koin.java.KoinJavaComponent.inject
+import androidx.navigation.NavController
+import com.dogshare.navigation.NavigationRoutes
 
 @Composable
 fun LoginScreen(
-    onForgotPassword: () -> Unit,
+    navController: NavController,
+    onGoogleSignIn: () -> Unit,    // Google Sign-In callback
     onCreateAccount: () -> Unit,
     onLoginSuccess: (String) -> Unit,
-    onLoginFailed: (String) -> Unit
+    onLoginFailed: (String) -> Unit,
+    onForgotPassword: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loginErrorMessage by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
 
-    // Get the current context
-    val context = LocalContext.current
-
-    // Inject PreferencesRepository
     val preferencesRepository: PreferencesRepository by inject(PreferencesRepository::class.java)
 
     Column(
@@ -43,7 +41,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Email TextField
         TextField(
             value = email,
             onValueChange = { email = it },
@@ -54,19 +51,17 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Password TextField
         TextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            visualTransformation = PasswordVisualTransformation() // Hide the password input
+            visualTransformation = PasswordVisualTransformation()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Display an error message if login fails
         loginErrorMessage?.let {
             Text(
                 text = it,
@@ -76,25 +71,19 @@ fun LoginScreen(
             )
         }
 
-        // Log In button
         Button(
             onClick = {
                 isLoading = true
-                Log.d("LoginScreen", "Attempting to log in with email: $email")
-                // Handle login logic
                 performLogin(
                     email = email,
                     password = password,
-                    context = context,  // Pass the context here
                     preferencesRepository = preferencesRepository,
                     onLoginSuccess = { userId ->
                         isLoading = false
-                        Log.d("LoginScreen", "Login successful, userId: $userId")
                         onLoginSuccess(userId)
                     },
                     onLoginFailed = { error ->
                         isLoading = false
-                        Log.e("LoginScreen", "Login failed: $error")
                         loginErrorMessage = error
                         onLoginFailed(error)
                     }
@@ -115,14 +104,28 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextButton(onClick = onForgotPassword) {
-            Text(text = "Forgot Password?")
+        // Google Sign-In Button
+        Button(
+            onClick = {
+                onGoogleSignIn()   // Trigger Google Sign-In
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Sign in with Google")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(onClick = {
+            navController.navigate(NavigationRoutes.ForgotPassword.route)
+        }) {
+            Text("Forgot Password?")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(onClick = onCreateAccount) {
-            Text(text = "Create Account")
+            Text("Create Account")
         }
     }
 }
@@ -130,8 +133,7 @@ fun LoginScreen(
 private fun performLogin(
     email: String,
     password: String,
-    context: Context,
-    preferencesRepository: PreferencesRepository, // Injected PreferencesRepository
+    preferencesRepository: PreferencesRepository,
     onLoginSuccess: (String) -> Unit,
     onLoginFailed: (String) -> Unit
 ) {
@@ -142,28 +144,17 @@ private fun performLogin(
                 if (task.isSuccessful) {
                     val userId = auth.currentUser?.uid
                     if (userId != null) {
-                        Log.d("LoginScreen", "Firebase login successful, userId: $userId")
-
-                        // Use PreferencesRepository to handle preferences
                         preferencesRepository.setUserId(userId)
                         preferencesRepository.updateLastLoginTimestamp()
-                        preferencesRepository.setPromptLogin(false)
-
                         onLoginSuccess(userId)
                     } else {
-                        val error = "Failed to retrieve user ID"
-                        Log.e("LoginScreen", error)
-                        onLoginFailed(error)
+                        onLoginFailed("Failed to retrieve user ID")
                     }
                 } else {
-                    val error = task.exception?.message ?: "Authentication failed"
-                    Log.e("LoginScreen", "Firebase login failed: $error")
-                    onLoginFailed(error)
+                    onLoginFailed(task.exception?.message ?: "Authentication failed")
                 }
             }
     } else {
-        val error = "Email or password cannot be empty"
-        Log.e("LoginScreen", error)
-        onLoginFailed(error)
+        onLoginFailed("Email or password cannot be empty")
     }
 }

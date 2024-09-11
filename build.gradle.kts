@@ -2,7 +2,7 @@
 buildscript {
     dependencies {
         // Classpath for Google Services, adjust versions as necessary
-        classpath("com.google.gms:google-services:4.4.2")
+        classpath(libs.google.services)
         // Add any additional classpath dependencies needed for your build tools here
     }
 }

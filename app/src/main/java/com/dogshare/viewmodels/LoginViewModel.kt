@@ -6,9 +6,11 @@ import com.dogshare.services.AuthService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import com.dogshare.repository.PreferencesRepository
 
 class LoginViewModel(
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     private val _email = MutableStateFlow("")
@@ -36,9 +38,15 @@ class LoginViewModel(
         viewModelScope.launch {
             val result = authService.signIn(_email.value, _password.value)
             _isLoading.value = false
-            _loginState.value = result.fold(
-                onSuccess = { "Login successful!" },
-                onFailure = { it.message ?: "An error occurred during login." }
+            result.fold(
+                onSuccess = {
+                    // Save user ID on successful login
+                    preferencesRepository.setUserId(it)
+                    _loginState.value = "Login successful!"
+                },
+                onFailure = {
+                    _loginState.value = it.message ?: "An error occurred during login."
+                }
             )
         }
     }

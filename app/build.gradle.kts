@@ -54,6 +54,9 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.security.crypto.ktx.v110alpha06)
 
+    // Squareup API dependencies for image retrival
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     // AndroidX and Jetpack Compose dependencies
     implementation(libs.androidx.core.ktx)
@@ -70,6 +73,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
 
     // Koin for dependency injection framework for Kotlin
     implementation(libs.koin.core.v320)
@@ -83,6 +88,7 @@ dependencies {
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.accompanist.navigation.animation)
+    implementation("com.google.android.material:material:1.9.0")
 
     // Coil for image loading
     implementation(libs.coil.compose)
@@ -91,6 +97,7 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.security.crypto.ktx)
+    implementation(libs.androidx.room.paging)
 
     // Testing dependencies
     testImplementation(libs.junit)

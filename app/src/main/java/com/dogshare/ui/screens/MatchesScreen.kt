@@ -48,7 +48,10 @@ fun MatchesScreen(
 @Composable
 fun MatchItem(match: String, onMatchSelected: (String) -> Unit) {
     TextButton(
-        onClick = { onMatchSelected(match) },
+        onClick = {
+            // Navigate to a match detail screen or handle match selection logic
+            onMatchSelected(match)
+        },
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(text = match)  // Customize to display match details

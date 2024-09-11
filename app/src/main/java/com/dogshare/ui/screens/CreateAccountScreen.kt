@@ -9,11 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.dogshare.viewmodels.CreateAccountViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CreateAccountScreen(
+    navController: NavController,
     onLoginInstead: () -> Unit,
     viewModel: CreateAccountViewModel = koinViewModel()  // Using koinViewModel for Koin dependency injection
 ) {

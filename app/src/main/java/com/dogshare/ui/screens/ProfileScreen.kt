@@ -19,9 +19,8 @@ fun ProfileScreen(
     userId: String,
     navController: NavController,
     viewModel: ProfileViewModel = koinViewModel(),
-    logoutViewModel: LogoutViewModel = koinViewModel() // Inject LogoutViewModel
+    logoutViewModel: LogoutViewModel = koinViewModel()
 ) {
-    // Observe the states from the ProfileViewModel
     val email by viewModel.email.collectAsState()
     val petType by viewModel.petType.collectAsState()
     val petSize by viewModel.petSize.collectAsState()
@@ -31,7 +30,6 @@ fun ProfileScreen(
     val saveProfileState by viewModel.saveProfileState.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    // Effect to fetch profile data whenever userId changes or re-fetch on re-composition
     LaunchedEffect(userId) {
         viewModel.fetchProfile(userId)
     }
@@ -40,7 +38,6 @@ fun ProfileScreen(
         bottomBar = { BottomNavigationBar(navController = navController, userId = userId) }
     ) { innerPadding ->
         if (isLoading) {
-            // Show loading indicator
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
@@ -56,6 +53,7 @@ fun ProfileScreen(
                 Text(text = "Profile", style = MaterialTheme.typography.headlineSmall)
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Dynamic fields with save logic
                 OutlinedTextField(
                     value = email,
                     onValueChange = { viewModel.updateEmail(it) },
@@ -115,7 +113,6 @@ fun ProfileScreen(
                 Button(
                     onClick = {
                         logoutViewModel.logout {
-                            // Navigate to login screen after logout
                             navController.navigate("login") {
                                 popUpTo(0) { inclusive = true }  // Clear back stack
                             }
