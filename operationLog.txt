@@ -1,10 +1,18 @@
-﻿Starting the script at 09/10/2024 15:13:21
+﻿Starting the script at 09/12/2024 00:20:11
 Existing output file removed.
 Output file created.
+Found specific file: SwipingScreen.kt
 Found specific file: SwipeableCard.kt
-Found specific file: SwipeableCardState.kt
-Specific files found: 2
+Found specific file: SwipingScreenViewModel.kt
+Found specific file: UnsplashApi.kt
+Found specific file: RetrofitClient.kt
+Found specific file: DogProfile.kt
+Specific files found: 6
+Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\SwipingScreen.kt
 Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\components\SwipeableCard.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\components\SwipeableCardState.kt
+Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\SwipingScreenViewModel.kt
+Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\api\UnsplashApi.kt
+Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\network\RetrofitClient.kt
+Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\models\DogProfile.kt
 Specific files or file types were specified. Skipping saving to lastFullFile.
-Script completed successfully at 09/10/2024 15:13:21
+Script completed successfully at 09/12/2024 00:20:11

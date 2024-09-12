@@ -4,16 +4,19 @@ C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\AndroidManife
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\ic_launcher-playstore.png
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare
+C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\api
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\certs
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\di
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\models
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\navigation
+C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\network
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\repository
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\services
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui
-C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\utils
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\DogShareApp.kt
+C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\api\UnsplashApi.kt
+C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\api\UnsplashPhoto.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\certs\dogshare-keystore.jks
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\di\appModule.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\di\viewModelModule.kt
@@ -21,6 +24,7 @@ C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogs
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\models\UserSettings.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\navigation\AppNavigation.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\navigation\NavigationRoutes.kt
+C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\network\RetrofitClient.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\repository\PreferencesRepository.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\repository\UserRepository.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\services\AuthServices.kt
@@ -30,8 +34,8 @@ C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogs
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\theme
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\MainActivity.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\components\BottomNavigationBar.kt
+C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\components\showToast.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\components\SwipeableCard.kt
-C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\components\SwipeableCardState.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\composables\QuestionnaireSection.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\composables\SettingItemToggle.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\CreateAccountScreen.kt
@@ -53,6 +57,7 @@ C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogs
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\ProfileUpdateViewModel.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\ProfileViewModel.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\SettingsViewModel.kt
+C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\SwipingScreenViewModel.kt
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\drawable
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\mipmap-anydpi-v26
 C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\mipmap-hdpi

@@ -7,13 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.dogshare.R
 import com.dogshare.navigation.NavigationRoutes
 import com.dogshare.ui.components.BottomNavigationBar
 
@@ -28,30 +22,6 @@ fun LandingPageScreen(
 
     userId?.let {
         Scaffold(
-            topBar = {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_round),
-                        contentDescription = "App Icon",
-                        modifier = Modifier.size(48.dp),
-                        contentScale = ContentScale.Fit
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Dogshare",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            },
             bottomBar = {
                 BottomNavigationBar(navController = navController, userId = it)
             }
