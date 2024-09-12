@@ -12,7 +12,6 @@ import com.dogshare.ui.screens.*
 fun AppNavigation(
     navController: NavHostController,
     startDestination: String,
-    onGoogleSignIn: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Log.d("Navigation", "Start destination set to: $startDestination")
@@ -25,7 +24,6 @@ fun AppNavigation(
         composable(NavigationRoutes.Login.route) {
             LoginScreen(
                 navController = navController,
-                onGoogleSignIn = onGoogleSignIn,
                 onCreateAccount = {
                     navController.navigate(NavigationRoutes.CreateAccount.route)
                 },
@@ -36,6 +34,9 @@ fun AppNavigation(
                 },
                 onLoginFailed = {
                     navController.navigate(NavigationRoutes.LoginFailed.route)
+                },
+                onGoogleSignIn = {
+                    navController.navigate(NavigationRoutes.GoogleSignIn.route)
                 },
                 onForgotPassword = {
                     navController.navigate(NavigationRoutes.ForgotPassword.route)

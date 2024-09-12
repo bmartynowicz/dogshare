@@ -7,6 +7,7 @@ import com.dogshare.viewmodels.SettingsViewModel
 import com.dogshare.viewmodels.ProfileViewModel
 import com.dogshare.viewmodels.LogoutViewModel
 import com.dogshare.viewmodels.CreateAccountViewModel
+import com.dogshare.viewmodels.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -36,4 +37,6 @@ val viewModelModule = module {
 
     // Provide CreateAccountViewModel with PreferencesRepository and FirebaseAuth as dependencies
     viewModel { CreateAccountViewModel(get(), get()) }
+
+    viewModel { LoginViewModel(get(), get(), get()) }
 }

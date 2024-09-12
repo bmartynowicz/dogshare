@@ -1,7 +1,6 @@
 package com.dogshare
 
 import android.app.Application
-import android.util.Log
 import com.dogshare.di.appModule
 import com.dogshare.di.viewModelModule
 import com.dogshare.repository.PreferencesRepository

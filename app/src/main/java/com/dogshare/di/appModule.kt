@@ -4,7 +4,6 @@ import com.dogshare.repository.PreferencesRepository
 import com.dogshare.repository.UserRepository
 import com.dogshare.services.AuthService
 import com.dogshare.viewmodels.CreateAccountViewModel
-import com.dogshare.viewmodels.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.dsl.module
@@ -25,5 +24,4 @@ val appModule = module {
 
     // ViewModels
     viewModel { CreateAccountViewModel(get(), get()) }
-    viewModel { LoginViewModel(get(), get()) }
 }
