@@ -34,18 +34,7 @@ class DogShareApp : Application() {
 
     private fun setupPreferences() {
         preferencesRepository = GlobalContext.get().get<PreferencesRepository>()
-        checkAndUpdateLoginTimestamp()
     }
 
-    private fun checkAndUpdateLoginTimestamp() {
-        val lastLoginTimestamp = preferencesRepository.getLastLoginTimestamp()
-        val currentTime = System.currentTimeMillis()
-        if (currentTime - lastLoginTimestamp > 15 * 24 * 60 * 60 * 1000L) {
-            preferencesRepository.setPromptLogin(true)
-        } else {
-            preferencesRepository.updateLastLoginTimestamp()
-            preferencesRepository.setPromptLogin(false)
-        }
-    }
 }
 

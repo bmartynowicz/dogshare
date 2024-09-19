@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.google.firebase.firestore.FirebaseFirestore
 
 class PreferencesRepository(context: Context) {
 
@@ -16,6 +17,12 @@ class PreferencesRepository(context: Context) {
         private const val KEY_USER_ID = "user_id"
         private const val PROMPT_LOGIN_KEY = "prompt_login"
         private const val LAST_LOGIN_TIMESTAMP_KEY = "last_login_timestamp"
+        private const val KEY_FIRST_LOGIN_COMPLETED = "isFirstLoginCompleted"
+        private const val KEY_BREED_PREFERENCE = "breed_preference"
+        private const val KEY_LOCATION_RADIUS = "location_radius"
+        private const val KEY_AVAILABILITY = "availability"
+        private const val KEY_ACTIVITY_LEVEL = "activity_level"
+
     }
 
     // Initialize encrypted SharedPreferences
@@ -31,9 +38,23 @@ class PreferencesRepository(context: Context) {
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 
-    // Getters for preferences
-    fun getPromptLogin(): Boolean = sharedPreferences.getBoolean(PROMPT_LOGIN_KEY, true)
-    fun getLastLoginTimestamp(): Long = sharedPreferences.getLong(LAST_LOGIN_TIMESTAMP_KEY, 0L)
+    private fun getFirstLoginCompletedKey(): String {
+        val userId = getUserId()
+        return "$KEY_FIRST_LOGIN_COMPLETED$userId"
+    }
+
+    fun isFirstLoginCompleted(): Boolean {
+        val key = getFirstLoginCompletedKey()
+        val isCompleted = sharedPreferences.getBoolean(key, false)
+        Log.d("PreferencesRepository", "isFirstLoginCompleted(): key=$key, isCompleted=$isCompleted")
+        return isCompleted
+    }
+
+    fun setFirstLoginCompleted() {
+        val key = getFirstLoginCompletedKey()
+        sharedPreferences.edit().putBoolean(key, true).apply()
+        Log.d("PreferencesRepository", "First login completed set to true for key: $key")
+    }
 
     fun getUserId(): String? {
         val userId = sharedPreferences.getString(KEY_USER_ID, null)
@@ -89,4 +110,53 @@ class PreferencesRepository(context: Context) {
     fun setAccountPrivacyEnabled(value: Boolean) {
         sharedPreferences.edit().putBoolean(KEY_ACCOUNT_PRIVACY_ENABLED, value).apply()
     }
+
+    fun getBreedPreference(): String? = sharedPreferences.getString(KEY_BREED_PREFERENCE, null)
+    fun getLocationRadius(): Int = sharedPreferences.getInt(KEY_LOCATION_RADIUS, 0)
+    fun getAvailability(): String? = sharedPreferences.getString(KEY_AVAILABILITY, null)
+    fun getActivityLevel(): String? = sharedPreferences.getString(KEY_ACTIVITY_LEVEL, null)
+
+    fun setBreedPreference(breed: String) {
+        sharedPreferences.edit().putString(KEY_BREED_PREFERENCE, breed).apply()
+    }
+
+    fun setLocationRadius(radius: Int) {
+        sharedPreferences.edit().putInt(KEY_LOCATION_RADIUS, radius).apply()
+    }
+
+    fun setAvailability(availability: String) {
+        sharedPreferences.edit().putString(KEY_AVAILABILITY, availability).apply()
+    }
+
+    fun setActivityLevel(activityLevel: String) {
+        sharedPreferences.edit().putString(KEY_ACTIVITY_LEVEL, activityLevel).apply()
+    }
+
+    fun syncPreferencesToCloud(userId: String) {
+        val userSettings = mapOf(
+            "breed_preference" to getBreedPreference(),
+            "location_radius" to getLocationRadius(),
+            "availability" to getAvailability(),
+            "activity_level" to getActivityLevel()
+            // Add other preferences as needed
+        )
+
+        FirebaseFirestore.getInstance().collection("userPreferences")
+            .document(userId)
+            .set(userSettings)
+            .addOnSuccessListener { Log.d("PreferencesRepository", "Preferences synced successfully!") }
+            .addOnFailureListener { e -> Log.e("PreferencesRepository", "Error syncing preferences", e) }
+    }
+
+    // Clear additional preferences when needed
+    fun clearAdditionalPreferences() {
+        sharedPreferences.edit().remove(KEY_BREED_PREFERENCE)
+            .remove(KEY_LOCATION_RADIUS)
+            .remove(KEY_AVAILABILITY)
+            .remove(KEY_ACTIVITY_LEVEL)
+            .apply()
+    }
+
+
+
 }

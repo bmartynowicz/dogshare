@@ -1,8 +1,10 @@
 package com.dogshare.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dogshare.navigation.NavigationRoutes
 import com.dogshare.services.AuthService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +41,31 @@ class LoginViewModel(
         checkAuthentication()
     }
 
+    private fun checkFirstTimeLogin() {
+        val userId = preferencesRepository.getUserId()
+        if (userId != null) {
+            Log.d("CheckFirstTimeLogin", "Retrieved User ID: $userId")
+            if (!preferencesRepository.isFirstLoginCompleted()) {
+                Log.d("CheckFirstTimeLogin", "First login not completed. Navigating to WelcomeScreen.")
+                _navigationCommand.value = NavigationRoutes.WelcomeScreen.createRoute(userId)
+            } else {
+                Log.d("CheckFirstTimeLogin", "First login completed. Navigating to LandingPage.")
+                _navigationCommand.value = NavigationRoutes.LandingPage.createRoute(userId)
+            }
+        } else {
+            Log.e("CheckFirstTimeLogin", "User ID is null. Redirecting to login.")
+            _navigationCommand.value = NavigationRoutes.Login.route
+        }
+    }
+
+    fun completeFirstLogin() {
+        viewModelScope.launch {
+            preferencesRepository.setFirstLoginCompleted()
+            checkFirstTimeLogin()  // Redirect after setting the flag
+        }
+    }
+
+
     private fun checkAuthentication() {
         val userId = preferencesRepository.getUserId()
         if (userId != null && authService.isSignedIn()) {
@@ -63,10 +90,12 @@ class LoginViewModel(
             _isLoading.value = false
             result.fold(
                 onSuccess = {
+                    Log.d("Login", "User ID: $it") // Log the user ID
                     preferencesRepository.setUserId(it)
                     _loginState.value = "Login successful!"
-                    _navigationCommand.value = "LandingPage/$it"
-                },
+                    checkFirstTimeLogin()
+                }
+                ,
                 onFailure = {
                     _loginState.value = it.message ?: "An error occurred during login."
                 }

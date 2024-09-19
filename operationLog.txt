@@ -1,63 +1,12 @@
-﻿Starting the script at 09/12/2024 01:10:43
+﻿Starting the script at 09/14/2024 14:45:32
 Existing output file removed.
 Output file created.
-Found files with extension: *.kt
-No files found with extension: *.kts
-Found files with extension: *.xml
-No files found with extension: *.json
-Files found with specified extensions: 53
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\DogShareApp.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\api\UnsplashApi.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\api\UnsplashPhoto.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\di\appModule.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\di\viewModelModule.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\models\DogProfile.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\models\UserSettings.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\navigation\AppNavigation.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\navigation\NavigationRoutes.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\network\RetrofitClient.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\repository\PreferencesRepository.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\repository\UserRepository.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\services\AuthServices.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\MainActivity.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\components\BottomNavigationBar.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\components\showToast.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\components\SwipeableCard.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\composables\QuestionnaireSection.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\composables\SettingItemToggle.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\CreateAccountScreen.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\ForgotPasswordScreen.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\LandingPageScreen.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\LoginFailedScreen.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\LoginScreen.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\MatchesScreen.kt
+Found specific file: ProfileScreen.kt
+Found specific file: ProfileViewModel.kt
+File not found: ProfileRepository.kt
+File not found: UserProfile.kt
+Specific files found: 2
 Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\ProfileScreen.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\SettingsScreen.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\SwipingScreen.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\screens\WelcomeScreen.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\ui\theme\Theme.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\AuthViewModel.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\CreateAccountViewModel.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\LoginViewModel.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\LogOutViewModel.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\MainViewModel.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\ProfileUpdateViewModel.kt
 Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\ProfileViewModel.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\SettingsViewModel.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\java\com\dogshare\viewmodels\SwipingScreenViewModel.kt
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\AndroidManifest.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\drawable\ic_launcher_background.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\drawable\ic_visibility.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\drawable\ic_visibility_off.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\mipmap-anydpi-v26\ic_launcher.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\mipmap-anydpi-v26\ic_launcher_round.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\values\colors.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\values\strings.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\values\themes.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\values-night\colors.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\values-night\strings.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\values-night\themes.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\xml\backup_rules.xml
-Processing file: C:\Users\b.martynowicz\AndroidStudioProjects\DogShare\app\src\main\res\xml\data_extraction_rules.xml
 Specific files or file types were specified. Skipping saving to lastFullFile.
-Script completed successfully at 09/12/2024 01:10:44
+Script completed successfully at 09/14/2024 14:45:32

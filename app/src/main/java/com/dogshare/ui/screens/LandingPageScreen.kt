@@ -29,8 +29,6 @@ fun LandingPageScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
             ) {
                 SwipingScreen(userId = userId)  // Embedded swiping screen within the LandingPageScreen
             }

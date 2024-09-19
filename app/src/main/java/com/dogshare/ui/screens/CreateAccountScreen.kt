@@ -10,7 +10,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.dogshare.repository.PreferencesRepository
 import com.dogshare.viewmodels.CreateAccountViewModel
+import org.koin.androidx.compose.getKoin
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -24,6 +26,7 @@ fun CreateAccountScreen(
     val confirmPassword by remember { viewModel.confirmPassword }
     val isLoading by viewModel.isLoading.collectAsState()
     val createAccountState by viewModel.createAccountState.collectAsState()
+    val preferencesRepository: PreferencesRepository = getKoin().get()
 
     Scaffold { paddingValues ->
         Box(
@@ -86,6 +89,7 @@ fun CreateAccountScreen(
                     Button(
                         onClick = {
                             viewModel.createAccount()
+                            preferencesRepository.setFirstLoginCompleted()
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {

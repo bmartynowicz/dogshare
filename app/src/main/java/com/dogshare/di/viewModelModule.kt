@@ -8,6 +8,7 @@ import com.dogshare.viewmodels.ProfileViewModel
 import com.dogshare.viewmodels.LogoutViewModel
 import com.dogshare.viewmodels.CreateAccountViewModel
 import com.dogshare.viewmodels.LoginViewModel
+import com.dogshare.viewmodels.OnboardingViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -19,9 +20,6 @@ val viewModelModule = module {
 
     // Provide Firebase Firestore instance
     single { FirebaseFirestore.getInstance() }
-
-    // Provide PreferencesRepository with Context and Firebase Firestore as dependencies
-    single { PreferencesRepository(get())}
 
     // Provide MainViewModel with FirebaseAuth as a dependency
     viewModel { MainViewModel(get()) }
@@ -39,4 +37,6 @@ val viewModelModule = module {
     viewModel { CreateAccountViewModel(get(), get()) }
 
     viewModel { LoginViewModel(get(), get(), get()) }
+
+    viewModel { OnboardingViewModel(get()) }
 }

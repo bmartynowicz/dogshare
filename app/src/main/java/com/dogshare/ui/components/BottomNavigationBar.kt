@@ -1,15 +1,16 @@
 package com.dogshare.ui.components
 
-import android.util.Log
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -18,50 +19,69 @@ import com.dogshare.navigation.NavigationRoutes
 @Composable
 fun BottomNavigationBar(navController: NavController, userId: String) {
     val items = listOf(
-        BottomNavItem(NavigationRoutes.LandingPage.createRoute(userId), Icons.Default.Home, "Home"),
-        BottomNavItem(NavigationRoutes.Matches.createRoute(userId), Icons.Default.Favorite, "Matches"),
-        BottomNavItem(NavigationRoutes.Settings.createRoute(userId), Icons.Default.Settings, "Settings"),
-        BottomNavItem(NavigationRoutes.Profile.createRoute(userId), Icons.Default.AccountCircle, "Profile")
+        BottomNavItem.Home,
+        BottomNavItem.Matches,
+        BottomNavItem.NewFeature,
+        BottomNavItem.Profile
     )
 
-    NavigationBar {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-
+    BottomNavigation {
+        val currentRoute = currentRoute(navController)
         items.forEach { item ->
-            NavigationBarItem(
-                icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.label,
-                        tint = if (currentRoute == item.route) MaterialTheme.colorScheme.primary else Color.Gray
-                    )
-                },
-                label = {
-                    Text(
-                        text = item.label,
-                        color = if (currentRoute == item.route) MaterialTheme.colorScheme.primary else Color.Gray
-                    )
-                },
-                selected = currentRoute == item.route,
+            BottomNavigationItem(
+                icon = { Icon(item.icon, contentDescription = item.title) },
+                label = { Text(item.title) },
+                selected = currentRoute == item.baseRoute,
                 onClick = {
-                    Log.d("BottomNavigationBar", "Button clicked: ${item.label}")
-                    Log.d("BottomNavigationBar", "Current route: $currentRoute")
-                    Log.d("BottomNavigationBar", "Navigating to: ${item.route}")
-                    if (currentRoute != item.route) {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                    val route = when (item) {
+                        is BottomNavItem.Home -> item.createRoute(userId)
+                        is BottomNavItem.Matches -> item.createRoute(userId)
+                        is BottomNavItem.Profile -> item.createRoute(userId)
+                        else -> item.route
                     }
-                },
-                alwaysShowLabel = true
+
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             )
         }
     }
 }
 
-data class BottomNavItem(val route: String, val icon: ImageVector, val label: String)
+
+// Define your BottomNavItem with routes and icons
+sealed class BottomNavItem(
+    var title: String,
+    var icon: ImageVector,
+    var route: String,
+    var baseRoute: String
+) {
+    object Home : BottomNavItem("Home", Icons.Default.Home, "landingPage/{$USER_ID}", "landingPage") {
+        fun createRoute(userId: String) = "landingPage/$userId"
+    }
+    object Matches : BottomNavItem("Matches", Icons.Default.Search, "matches/{$USER_ID}", "matches") {
+        fun createRoute(userId: String) = "matches/$userId"
+    }
+    object NewFeature : BottomNavItem("New", Icons.Default.AddCircle, NavigationRoutes.NewFeature.route, "new_feature")
+    object Profile : BottomNavItem("Profile", Icons.Default.Person, NavigationRoutes.Profile.route, "profile") {
+        fun createRoute(userId: String) = NavigationRoutes.Profile.createRoute(userId)
+    }
+
+    companion object {
+        const val USER_ID = "userId"
+    }
+}
+
+@Composable
+fun currentRoute(navController: NavController): String? {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val route = navBackStackEntry?.destination?.route
+    return route?.substringBefore("/")
+}
+
+

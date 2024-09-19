@@ -98,8 +98,7 @@ fun SwipingScreen(
     } else {
         Box(
             modifier = modifier
-                .fillMaxSize()
-                .padding(16.dp),
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             // Full-screen swipeable card image

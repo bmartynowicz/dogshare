@@ -1,5 +1,6 @@
 package com.dogshare.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -21,13 +22,19 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = koinViewModel(),
     logoutViewModel: LogoutViewModel = koinViewModel()
 ) {
+    // State variables for profile fields
+    val username by viewModel.username.collectAsState()
     val email by viewModel.email.collectAsState()
-    val petType by viewModel.petType.collectAsState()
-    val petSize by viewModel.petSize.collectAsState()
-    val livingCondition by viewModel.livingCondition.collectAsState()
-    val activityLevel by viewModel.activityLevel.collectAsState()
+    val breedPreference by viewModel.breedPreference.collectAsState()
+    val sizePreference by viewModel.sizePreference.collectAsState()
+    val availability by viewModel.availability.collectAsState()
     val travelDistance by viewModel.travelDistance.collectAsState()
-    val saveProfileState by viewModel.saveProfileState.collectAsState()
+
+    // State variables for settings
+    val notificationEnabled by viewModel.notificationEnabled.collectAsState()
+    val darkModeEnabled by viewModel.darkModeEnabled.collectAsState()
+    val isDeletingAccount by viewModel.isDeletingAccount.collectAsState()
+
     val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(userId) {
@@ -47,69 +54,39 @@ fun ProfileScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
                     .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(text = "Profile", style = MaterialTheme.typography.headlineSmall)
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Dynamic fields with save logic
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { viewModel.updateEmail(it) },
-                    label = { Text("Email") },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = petType,
-                    onValueChange = { viewModel.updatePetType(it) },
-                    label = { Text("Pet Type") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = petSize,
-                    onValueChange = { viewModel.updatePetSize(it) },
-                    label = { Text("Pet Size") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = livingCondition,
-                    onValueChange = { viewModel.updateLivingCondition(it) },
-                    label = { Text("Living Condition") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = activityLevel,
-                    onValueChange = { viewModel.updateActivityLevel(it) },
-                    label = { Text("Activity Level") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                OutlinedTextField(
-                    value = travelDistance,
-                    onValueChange = { viewModel.updateTravelDistance(it) },
-                    label = { Text("Travel Distance") },
-                    modifier = Modifier.fillMaxWidth()
+                // Profile Information Section
+                ProfileInformationSection(
+                    username = username,
+                    email = email,
+                    breedPreference = breedPreference,
+                    sizePreference = sizePreference,
+                    availability = availability,
+                    travelDistance = travelDistance,
+                    onSaveProfile = { viewModel.saveProfile(userId) }
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                Button(
-                    onClick = {
-                        viewModel.saveProfile(userId)
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Save Profile")
-                }
+                // Settings Section
+                SettingsSection(
+                    notificationEnabled = notificationEnabled,
+                    onNotificationToggle = { viewModel.updateNotificationEnabled(it) },
+                    darkModeEnabled = darkModeEnabled,
+                    onDarkModeToggle = { viewModel.updateDarkModeEnabled(it) },
+                    onChangePassword = { /* Navigate to Change Password Screen */ },
+                    onDeleteAccount = { viewModel.deleteAccount(userId) },
+                    isDeletingAccount = isDeletingAccount
+                )
 
-                if (saveProfileState.isNotEmpty()) {
-                    Text(saveProfileState, color = MaterialTheme.colorScheme.error)
-                }
+                Spacer(modifier = Modifier.height(24.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
-
+                // Logout Button
                 Button(
                     onClick = {
                         logoutViewModel.logout {
@@ -127,3 +104,137 @@ fun ProfileScreen(
         }
     }
 }
+
+
+@Composable
+fun ProfileInformationSection(
+    username: String,
+    email: String,
+    breedPreference: String,
+    sizePreference: String,
+    availability: String,
+    travelDistance: String,
+    onSaveProfile: () -> Unit
+) {
+    Text(text = "Profile Information", style = MaterialTheme.typography.titleMedium)
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Text(text = "Username: $username", style = MaterialTheme.typography.bodyLarge)
+    Spacer(modifier = Modifier.height(8.dp))
+
+    OutlinedTextField(
+        value = email,
+        onValueChange = { /* Optionally handle email change */ },
+        label = { Text("Email") },
+        singleLine = true,
+        enabled = false, // Email should be non-editable in profile screen
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    OutlinedTextField(
+        value = breedPreference,
+        onValueChange = { /* Optionally handle breed preference change */ },
+        label = { Text("Breed Preference") },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    OutlinedTextField(
+        value = sizePreference,
+        onValueChange = { /* Optionally handle size preference change */ },
+        label = { Text("Size Preference") },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    OutlinedTextField(
+        value = availability,
+        onValueChange = { /* Optionally handle availability change */ },
+        label = { Text("Availability") },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    OutlinedTextField(
+        value = travelDistance,
+        onValueChange = { /* Optionally handle travel distance change */ },
+        label = { Text("Willing to travel (in miles)") },
+        singleLine = true,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    Button(
+        onClick = onSaveProfile,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Save Profile")
+    }
+}
+
+
+@Composable
+fun SettingsSection(
+    notificationEnabled: Boolean,
+    onNotificationToggle: (Boolean) -> Unit,
+    darkModeEnabled: Boolean,
+    onDarkModeToggle: (Boolean) -> Unit,
+    onChangePassword: () -> Unit,
+    onDeleteAccount: () -> Unit,
+    isDeletingAccount: Boolean
+) {
+    Text(text = "Settings", style = MaterialTheme.typography.titleMedium)
+    Spacer(modifier = Modifier.height(8.dp))
+
+    // Notification Preference
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Enable Notifications", modifier = Modifier.weight(1f))
+        Switch(
+            checked = notificationEnabled,
+            onCheckedChange = onNotificationToggle
+        )
+    }
+
+    // Dark Mode Preference
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Dark Mode", modifier = Modifier.weight(1f))
+        Switch(
+            checked = darkModeEnabled,
+            onCheckedChange = onDarkModeToggle
+        )
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // Change Password Button
+    Button(
+        onClick = onChangePassword,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Change Password")
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // Delete Account Button
+    Button(
+        onClick = onDeleteAccount,
+        modifier = Modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
+    ) {
+        if (isDeletingAccount) {
+            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+        } else {
+            Text("Delete Account")
+        }
+    }
+}
+
+

@@ -1,5 +1,6 @@
 package com.dogshare.ui.screens
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -13,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth
 import org.koin.java.KoinJavaComponent.inject
 import androidx.navigation.NavController
 import com.dogshare.navigation.NavigationRoutes
+import com.google.firebase.firestore.FirebaseFirestore
+import org.koin.androidx.compose.getKoin
 
 @Composable
 fun LoginScreen(
@@ -28,7 +31,7 @@ fun LoginScreen(
     var loginErrorMessage by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
 
-    val preferencesRepository: PreferencesRepository by inject(PreferencesRepository::class.java)
+    val preferencesRepository: PreferencesRepository = getKoin().get()
 
     Column(
         modifier = Modifier
@@ -78,9 +81,19 @@ fun LoginScreen(
                     email = email,
                     password = password,
                     preferencesRepository = preferencesRepository,
-                    onLoginSuccess = { userId ->
+                    onLoginSuccess = { userId, needsOnboarding ->
                         isLoading = false
-                        onLoginSuccess(userId)
+                        if (needsOnboarding) {
+                            // Navigate to the onboarding screen
+                            navController.navigate(NavigationRoutes.WelcomeScreen.createRoute(userId)) {
+                                popUpTo(NavigationRoutes.Login.route) { inclusive = true }
+                            }
+                        } else {
+                            // Navigate to the main landing page
+                            navController.navigate(NavigationRoutes.LandingPage.createRoute(userId)) {
+                                popUpTo(NavigationRoutes.Login.route) { inclusive = true }
+                            }
+                        }
                     },
                     onLoginFailed = { error ->
                         isLoading = false
@@ -134,7 +147,7 @@ private fun performLogin(
     email: String,
     password: String,
     preferencesRepository: PreferencesRepository,
-    onLoginSuccess: (String) -> Unit,
+    onLoginSuccess: (String, Boolean) -> Unit,
     onLoginFailed: (String) -> Unit
 ) {
     val auth = FirebaseAuth.getInstance()
@@ -146,7 +159,20 @@ private fun performLogin(
                     if (userId != null) {
                         preferencesRepository.setUserId(userId)
                         preferencesRepository.updateLastLoginTimestamp()
-                        onLoginSuccess(userId)
+
+                        // Fetch the user's profile from Firestore
+                        val userProfileRef = FirebaseFirestore.getInstance().collection("profiles").document(userId)
+                        userProfileRef.get()
+                            .addOnSuccessListener { document ->
+                                val isQuestionnaireCompleted = document.getBoolean("isQuestionnaireCompleted") ?: false
+                                Log.d("performLogin", "isQuestionnaireCompleted: $isQuestionnaireCompleted")
+
+                                onLoginSuccess(userId, !isQuestionnaireCompleted)
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("performLogin", "Error fetching user profile: ${e.message}")
+                                onLoginFailed("Error fetching user profile")
+                            }
                     } else {
                         onLoginFailed("Failed to retrieve user ID")
                     }
@@ -156,5 +182,15 @@ private fun performLogin(
             }
     } else {
         onLoginFailed("Email or password cannot be empty")
+    }
+}
+
+
+
+fun markOnboardingComplete(context: Context) {
+    val sharedPreferences = context.getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
+    with(sharedPreferences.edit()) {
+        putBoolean("OnboardingCompleted", true)
+        apply()
     }
 }

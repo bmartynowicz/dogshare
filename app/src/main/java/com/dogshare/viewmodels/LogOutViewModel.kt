@@ -1,6 +1,7 @@
 package com.dogshare.viewmodels
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dogshare.repository.PreferencesRepository
@@ -28,7 +29,13 @@ class LogoutViewModel(private val context: Context) : ViewModel() {
 
     private fun clearAppCache() {
         val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-        sharedPreferences.edit().clear().apply() // Clear preferences
+        sharedPreferences.edit()
+            // Remove specific keys that you want to clear
+            .remove("session_token")
+            .remove("temporary_data")
+            // Do not remove keys like "isFirstLoginCompleted" or "userId" if you want to keep them
+            .apply()
+        Log.d("LogoutViewModel", "App cache cleared")
         // You can also clean up other cached files or temporary data here
     }
 }

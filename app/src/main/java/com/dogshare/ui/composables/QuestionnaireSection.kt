@@ -3,6 +3,7 @@ package com.dogshare.ui.composables
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -13,9 +14,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavHostController
+import com.dogshare.navigation.NavigationRoutes
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FirebaseFirestore
 import com.dogshare.ui.components.ToastUtils
+import com.dogshare.repository.PreferencesRepository
+import com.google.firebase.firestore.SetOptions
+import org.koin.androidx.compose.getKoin
+import org.koin.androidx.compose.get
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,8 +30,9 @@ fun QuestionnaireSection(
     navController: NavHostController,
     onPreferencesSaved: () -> Unit
 ) {
-    val db = FirebaseFirestore.getInstance()
     val context = LocalContext.current
+    val preferencesRepository: PreferencesRepository = get()
+    val db = FirebaseFirestore.getInstance()
 
     var experience by remember { mutableStateOf("") }
     var careFrequency by remember { mutableStateOf("") }
@@ -36,25 +43,40 @@ fun QuestionnaireSection(
     // Function to save preferences along with geolocation
     fun savePreferencesWithLocation() {
         if (latitude != null && longitude != null) {
-            db.collection("user_preferences").document(userId).set(
-                mapOf(
-                    "Experience" to experience,
-                    "Frequency" to careFrequency,
-                    "Breed" to breedPreference,
-                    "Latitude" to latitude,
-                    "Longitude" to longitude
-                )
-            ).addOnSuccessListener {
-                onPreferencesSaved()
-                // Navigate to the SwipingSection after saving preferences
-                navController.navigate("swiping/${userId}")
-            }.addOnFailureListener {
-                ToastUtils.showToast(context,"Failed to save preferences, please try again.")
-            }
+            val userProfile = mapOf(
+                "experience" to experience.trim(),
+                "frequency" to careFrequency.trim(),
+                "breed" to breedPreference.trim(),
+                "latitude" to latitude,
+                "longitude" to longitude,
+                "isQuestionnaireCompleted" to true  // Add this line
+            )
+
+            db.collection("profiles").document(userId).set(userProfile, SetOptions.merge())
+                .addOnSuccessListener {
+                    preferencesRepository.setUserId(userId)
+                    preferencesRepository.setFirstLoginCompleted()
+                    Log.d("QuestionnaireSection", "First login completed set to true for userId: $userId")
+                    onPreferencesSaved()
+                    ToastUtils.showToast(context, "Profile updated successfully!")
+                    navController.navigate(NavigationRoutes.LandingPage.createRoute(userId)) {
+                        popUpTo(NavigationRoutes.Questionnaire.route) { inclusive = true }
+                    }
+                }
+                .addOnFailureListener {
+                    ToastUtils.showToast(context, "Failed to update profile, please try again.")
+                }
         } else {
-            // Inform the user about unavailable location
-            ToastUtils.showToast(context,"Location not available, please retry.")
+            ToastUtils.showToast(context, "Location not available, please retry.")
         }
+    }
+
+    fun validateAndSavePreferences() {
+        if (experience.isBlank() || careFrequency.isBlank() || breedPreference.isBlank()) {
+            ToastUtils.showToast(context, "Please fill all fields before saving.")
+            return
+        }
+        savePreferencesWithLocation()
     }
 
     // Capture the user's location when the questionnaire is filled out for the first time
@@ -69,7 +91,7 @@ fun QuestionnaireSection(
                 }
             }
             .addOnFailureListener {
-                // Handle the failure case, e.g., show an error message or retry
+                ToastUtils.showToast(context, "Error retrieving location. Please try again later.")
             }
     }
 
@@ -79,15 +101,12 @@ fun QuestionnaireSection(
     ) { permissions ->
         val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
         if (granted) {
-            // Permission is granted, capture the location
             captureLocation()
         } else {
-            // Handle the case where the permission is denied
-            // Show a message or navigate away
+            ToastUtils.showToast(context, "Location permission denied.")
         }
     }
 
-    // Call captureLocation when the composable is first loaded
     LaunchedEffect(Unit) {
         if (ActivityCompat.checkSelfPermission(
                 context,
@@ -97,7 +116,6 @@ fun QuestionnaireSection(
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // Request the missing permissions
             locationPermissionLauncher.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -105,16 +123,16 @@ fun QuestionnaireSection(
                 )
             )
         } else {
-            // Permissions are already granted, capture the location
             captureLocation()
         }
     }
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("What’s your experience with dogs?")
+        Text("What's your experience with dogs?")
         TextField(
             value = experience,
             onValueChange = { experience = it },
+            label = { Text("Experience") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
@@ -124,6 +142,8 @@ fun QuestionnaireSection(
         TextField(
             value = careFrequency,
             onValueChange = { careFrequency = it },
+            label = { Text("Care Frequency") },
+            placeholder = { Text("e.g., Daily, Weekly") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
@@ -133,13 +153,15 @@ fun QuestionnaireSection(
         TextField(
             value = breedPreference,
             onValueChange = { breedPreference = it },
+            label = { Text("Breed Preference") },
+            placeholder = { Text("e.g., Labrador, Beagle") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
 
         Button(
-            onClick = { savePreferencesWithLocation() },
+            onClick = { validateAndSavePreferences() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp)
